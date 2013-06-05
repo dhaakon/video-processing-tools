@@ -1,0 +1,18 @@
+#:kivy 1.7.1
+
+<OpenCVWidget>:
+  GridLayout:
+    rows: 3
+    width:root.width/3
+    Label:
+      font_size:  20
+      center_x:   root.width/2
+      top:        root.top - 50
+      text:       "Open CV Application"
+    Button:
+      id: "Button1"
+      text: "My Button"
+      on_touch_down:root.loadVideo()
+    Button:
+      id: "Button2"
+      text: "My Button 2"
