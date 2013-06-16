@@ -1,0 +1,49 @@
+#:kivy 1.7.1
+#:import kivy kivy
+
+<OCVBackground>:
+
+<OCVFileView>:
+  id: filechooser
+  width: 100
+
+  size_hint: 1, 0.3
+
+<OCVViewer>:
+  id: ocv_viewer
+  size_hint: 1.,1.
+  canvas:
+    Rectangle:
+      id:rect
+      size:self.size
+      
+<OCVProgress>:
+  id: ocv_progress
+  size_hint:0,1
+  canvas:
+    Color: 
+      rgb: (1.0,1.0,1.0)
+    Rectangle:
+      size:1920, 50
+
+<OCVButtons>:
+  rows:1
+  play_button:play_button
+  stop_button:stop_button
+  size_hint:( None, None )
+  size: 100,30
+
+  Button:
+    text:'Play'
+    id:play_button
+    on_release:self.parent.button_pressed(self.text)
+    size_hint:None, None
+    size: 50,30
+
+  Button:
+    text:'Stop'
+    opacity:0
+    id:stop_button
+    on_release:self.parent.button_pressed(self.text)
+    size_hint:None, None
+    size: 50, 30

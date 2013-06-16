@@ -2,3 +2,5 @@
 .DS_Store
 
 output/frame99.jpg
+
+output/.gitignore
