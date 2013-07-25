@@ -5,5 +5,6 @@ A collection of tools used to assist my creation of audio visualizations and int
 
 Dependencies
 ------------
-OpenCV for python
+OpenCV
+
 Kivy 1.81
