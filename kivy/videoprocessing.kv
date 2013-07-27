@@ -25,6 +25,62 @@
       rgb: (1.0,1.0,1.0)
     Rectangle:
       size:1920, 50
+<OCVHSVControls>:
+  min_hsv:min_hsv
+  max_hsv:max_hsv
+  min_sat:min_sat
+  max_sat:max_sat
+  min_val:min_val
+  max_val:max_val
+  id:ocv_hsv_controls
+  size_hint:0.3, 1
+  BoxLayout:
+    orientation:'vertical'
+    Slider:
+      id:min_hsv
+      min:0
+      max:180
+      value:5
+      on_value:self.parent.parent.slider_changed('min_hsv', self)
+    Slider:
+      id:max_hsv
+      min:0
+      max:180
+      value:45
+      on_value:self.parent.parent.slider_changed('max_hsv', self)
+
+    Slider:
+      id:min_sat
+      min:0
+      max:255
+      value:112
+      on_value:self.parent.parent.slider_changed('min_sat', self)
+
+    Slider:
+      id:max_sat
+      min:0
+      max:255
+      value:255
+      on_value:self.parent.parent.slider_changed('max_sat', self)
+
+    Slider:
+      id:min_val
+      min:0
+      max:255
+      value:55
+      on_value:self.parent.parent.slider_changed('min_val', self)
+
+    Slider:
+      id:max_val
+      min:0
+      max:255
+      value:255
+      on_value:self.parent.parent.slider_changed('max_val', self)
+    CheckBox:
+      label:'test'
+      on_active:self.parent.parent.check_box_handler(self.active)
+
+
 
 <OCVButtons>:
   rows:1

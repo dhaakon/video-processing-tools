@@ -65,13 +65,31 @@ class OCVBackground (FloatLayout):
         super(OCVBackground, self).__init__(**kwargs)
     pass
 
+class OCVHSVControls(StackLayout):
+    min_hsv     =   ObjectProperty(None)
+    max_hsv     =   ObjectProperty(None)
+    min_sat     =   ObjectProperty(None)
+    max_sat     =   ObjectProperty(None)
+    min_val     =   ObjectProperty(None)
+    max_val     =   ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super(OCVHSVControls, self).__init__(**kwargs)
+
+    pass
+    def check_box_handler(self, value):
+        self.ocv_viewer.ocv_video.show_frame = value
+    def slider_changed(self, value_type, value):
+        
+        self.ocv_viewer.set_value(value_type, value.value)
+
 class OCVViewer (Widget):
     texture=ObjectProperty(None)
     state=NumericProperty(None)
 
     def __init__(self, ocv_property, **kwargs):
         super(OCVViewer, self).__init__(**kwargs)
-        self.ocv_video = SobelViewer('post', SIZE)
+        self.ocv_video = OCVVideo('post', SIZE)
         self.path = ''
 
         self.ocv_video.create_video_capture( self.path )
@@ -79,6 +97,13 @@ class OCVViewer (Widget):
         self.texture = Texture.create(size=(SIZE))
         self.texture.flip_vertical()
         self.state = 0
+
+    def get_value( self, value_type ):
+        return self.ocv_video.get_value(value_type)
+
+    def set_value( self, value_type, value ):
+        self.ocv_video.set_value(value_type, value)
+
 
     '''
         Send the texture to the parent canvas
@@ -89,7 +114,6 @@ class OCVViewer (Widget):
             ClearBuffers()
             ClearColor(0, 0, 0, 0)
 
-        
         self.post_effect.texture0.texture = texture
         #self.post_effect.save(name) 
     '''
@@ -144,7 +168,7 @@ class OCVViewer (Widget):
     def get_frame ( self, frameCount ):
         succss, post_image = self.ocv_video.grab_image(frameCount, "post" )
         self.convert_image_to_texture( post_image, self.texture )
-
+        self.post_effect.update_mouse(self.ocv_video.cx, self.ocv_video.cy)
         self.post_effect.update_glsl()
         self.load_texture(self.texture, (0,0), 'e'+str(frameCount))
 
@@ -167,6 +191,10 @@ class PostEffect (Widget):
  
         self.texture = self.fbo.texture
         self.texture.flip_vertical()
+    def update_mouse(self, cx, cy):
+        """docstring for uo"""
+        # TODO: write code...
+        self.mouse = (cx, cy)
 
     def update_glsl(self, *largs):
         self.canvas['time'] = Clock.get_boottime()
@@ -188,7 +216,8 @@ class PostEffect (Widget):
             raise Exception('failed')
 
     def on_touch_move(self, touch):
-        self.mouse = touch.pos
+        pass
+        #self.mouse = touch.pos
     # now, if we have new widget to add,
     # add their graphics canvas to our Framebuffer, not the usual canvas.
     #
@@ -213,12 +242,12 @@ class PostEffect (Widget):
         self.canvas = c
 
 class OCVButtons (GridLayout):
-    play_button=ObjectProperty(None)
-    stop_button=ObjectProperty(None)
+    play_button     =   ObjectProperty(None)
+    stop_button     =   ObjectProperty(None)
 
-    ocv_viewer=ObjectProperty(None)
-    count=NumericProperty(400000)
-    fn=NumericProperty(0)
+    ocv_viewer      =   ObjectProperty(None)
+    count           =   NumericProperty(400000)
+    fn              =   NumericProperty(0)
 
     '''
         Animation Properties
@@ -276,16 +305,17 @@ class VideoProcessingApp(App):
 
         # UI element
         buttons = OCVButtons()
-
-        self.ocv_viewer = buttons.ocv_viewer = OCVViewer("post")
+        self.ocv_hsv_controls = OCVHSVControls()
+        self.ocv_hsv_controls.ocv_viewer = self.ocv_viewer = buttons.ocv_viewer = OCVViewer("post")
         buttons.post_effect = self.ocv_viewer.post_effect = self.post_effect = PostEffect()
 
         self.ocv_viewer.get_frame(1)
-
         self.app.add_widget(self.post_effect)
         self.post_effect.add_widget(self.ocv_viewer)
 
+
         self.app.add_widget(buttons)
+        self.app.add_widget(self.ocv_hsv_controls)
         buttons.button_pressed("Play")
 
         return self.app
