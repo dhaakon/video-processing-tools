@@ -30,8 +30,8 @@ class Shaders:
         vec3 oricol = texture2D(texture0,vec2(q.x,1.0-q.y)).xyz;
         vec3 col;
 
-        col.r = texture2D(texture0,vec2(uv.x+0.003,-uv.y)).x;
-        col.g = texture2D(texture0,vec2(uv.x+0.000,-uv.y)).y;
+        col.r = texture2D(texture0,vec2(uv.x+0.003,-uv.y/(mouse.x/100.0))).x;
+        col.g = texture2D(texture0,vec2(uv.x+0.000,-uv.y/(mouse.y/100.0))).y;
         col.b = texture2D(texture0,vec2(uv.x-0.003,-uv.y)).z;
 
         col = clamp(col*0.5+0.5*col*col*1.2,0.0,1.0);
@@ -40,12 +40,12 @@ class Shaders:
 
         col *= vec3(1.0,mouse.y/1000.0,mouse.x/1000.0);
 
-        col *= 0.9+0.1*sin(10.0*time+uv.y*1000.0);
+        //col *= 0.9+0.1*sin(10.0*time+uv.y*1000.0);
 
         col *= 0.97+0.03*sin(110.0*time);
 
-        float comp = smoothstep( 0.2, 0.9, sin(time) );
-        col = mix( col, oricol, clamp(-2.0+2.0*q.x+3.0*comp,0.0,1.0) );
+        //float comp = smoothstep( 0.2, 0.9, sin(time) );
+        //col = mix( col, oricol, clamp(-2.0+2.0*q.x+3.0*comp,0.0,1.0) );
 
         gl_FragColor = vec4(col,1.0);
     }
