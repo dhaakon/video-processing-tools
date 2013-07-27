@@ -7,4 +7,4 @@ Dependencies
 ------------
 OpenCV
 
-Kivy 1.81
+Kivy 1.70
